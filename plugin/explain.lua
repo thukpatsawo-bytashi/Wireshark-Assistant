@@ -2,39 +2,52 @@ local function explain_packet(...)
 
     local args = {...}
 
-    -- Packet metadata discovered from the packet menu callback
     local protocol = tostring(args[19] or "Unknown")
-    local src_ip   = tostring(args[63] or "Unknown")
-    local dst_ip   = tostring(args[67] or "Unknown")
 
-    -- Simple rule-based explanations
-    local explanations = {
-        TCP = "TCP is a reliable transport protocol that ensures ordered and error-checked delivery of data between hosts.",
+    local src = "Unknown"
+    local dst = "Unknown"
 
-        DNS = "DNS translates domain names into IP addresses so devices can locate services on a network.",
+    -- IPv4
+    if tostring(args[63] or ""):match("%d+%.%d+%.%d+%.%d+") then
+        src = tostring(args[63])
+        dst = tostring(args[67] or "Unknown")
+    end
 
-        HTTP = "HTTP is used to transfer web pages and API requests between clients and servers.",
+    -- IPv6
+    if tostring(args[56] or ""):find(":") then
+        src = tostring(args[56])
+        dst = tostring(args[62] or "Unknown")
+    end
 
-        ["TLSv1.2"] = "TLS encrypts communication between a client and server to protect data in transit.",
+    local explanation = ""
 
-        ["TLSv1.3"] = "TLS encrypts communication between a client and server using modern cryptographic standards.",
+    if protocol == "TCP" then
+        explanation =
+            "This packet belongs to a TCP connection. TCP provides reliable communication between devices."
 
-        ICMP = "ICMP is used for network diagnostics and control messages such as ping requests and replies."
-    }
+    elseif protocol == "DNS" then
+        explanation =
+            "This packet is related to DNS, which translates domain names into IP addresses."
 
-    local explanation =
-        explanations[protocol]
-        or "No explanation available for this protocol yet."
+    elseif protocol == "TLSv1.2" or protocol == "TLSv1.3" then
+        explanation =
+            "This packet is part of an encrypted TLS session."
+
+    elseif protocol == "HTTP" then
+        explanation =
+            "This packet is part of HTTP web traffic."
+
+    else
+        explanation =
+            "No protocol-specific explanation is available yet."
+    end
 
     local output =
         "Wireshark Assistant\n" ..
         "====================\n\n" ..
-
         "Protocol: " .. protocol .. "\n\n" ..
-
-        "Source: " .. src_ip .. "\n" ..
-        "Destination: " .. dst_ip .. "\n\n" ..
-
+        "Source: " .. src .. "\n" ..
+        "Destination: " .. dst .. "\n\n" ..
         "Explanation:\n" ..
         explanation
 
