@@ -20,4 +20,6 @@ Describe the Wireshark-traffic in colour.
 
 ## Status
 
-🚧 Early Development
+🚧 Plugin with hardcoded explanations of packets is done and working.
+   Currently working on the AI integration
+   
