@@ -1,98 +1,97 @@
 # Wireshark Assistant
 
-An AI-powered Wireshark plugin that provides contextual, human-readable explanations of captured network packets directly within the Wireshark interface. The project combines Wireshark's Lua plugin framework with a Python Flask backend and Google's Gemini API to make packet analysis more accessible for students, cybersecurity enthusiasts, and professionals.
-
----
+An AI-powered Wireshark plugin that explains captured network packets in plain English using Google Gemini. Built with the Wireshark Lua API and a Python Flask backend, it helps students and security professionals understand packet contents more efficiently.
 
 ## Features
 
-### Implemented
+- Extracts packet metadata using the Wireshark Lua API
+- Generates AI-powered packet explanations with Google Gemini
+- Flask backend for prompt generation and inference
+- Displays explanations directly inside Wireshark
+- JSON-based communication between Wireshark and the backend
 
-* Packet metadata extraction using the Wireshark Lua API.
-* AI-powered packet explanations using Google Gemini.
-* Python Flask backend for prompt generation and AI inference.
-* End-to-end communication pipeline between Wireshark and the AI backend using JSON.
-* Packet explanations displayed directly inside Wireshark.
+## Planned Features
 
-### In Progress
-
-* Improved popup formatting for cleaner, more readable AI responses.
-* Robust JSON parsing and enhanced backend error handling.
-* General code cleanup and performance improvements for the first stable release.
-
-### Planned
-
-* AI chat interface for asking questions about packets and protocols.
-* Capture-wide traffic summarisation.
-* Protocol-specific guidance and educational explanations.
-* Intelligent threat analysis and suspicious activity detection.
-* AI-assisted filtering and investigation recommendations.
-
----
+- AI chat for packet analysis
+- Capture-wide traffic summaries
+- Threat detection assistance
+- Protocol-specific explanations
+- Intelligent filtering recommendations
 
 ## Architecture
 
 ```text
 Wireshark
-      │
-      ▼
+    │
 Lua Plugin
-      │
-      ▼
+    │
 Packet Metadata (JSON)
-      │
-      ▼
-Python Flask Backend
-      │
-      ▼
-Prompt Builder
-      │
-      ▼
-Google Gemini API
-      │
-      ▼
-AI Response (JSON)
-      │
-      ▼
+    │
+Flask Backend
+    │
+Google Gemini
+    │
+AI Response
+    │
 Wireshark Popup
 ```
 
----
-
 ## Tech Stack
 
-* **Languages:** Lua, Python
-* **Framework:** Flask
-* **AI:** Google Gemini API
-* **Networking:** Wireshark Lua API
-* **Data Format:** JSON
+- **Languages:** Lua, Python
+- **Framework:** Flask
+- **AI:** Google Gemini API
+- **Tools:** Wireshark, JSON
 
----
+## Quick Start
 
-## Project Status
+```bash
+git clone https://github.com/thukpatsawo-bytashi/Wireshark-Assistant.git
+cd Wireshark-Assistant/backend
 
-🚧 **Under Active Development**
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
-The core AI pipeline has been successfully implemented and is fully functional. Current development focuses on improving the user experience, strengthening error handling, and preparing the project for its first public release. Future updates will introduce conversational AI, capture-level analysis, and advanced cybersecurity assistance.
+Create a `.env` file:
 
----
+```env
+GEMINI_API_KEY=your_api_key
+```
 
-## Roadmap
+Start the backend:
 
-* [x] Extract packet metadata from Wireshark
-* [x] Integrate Flask backend
-* [x] Connect Google Gemini
-* [x] Display AI-generated packet explanations
-* [ ] Improve UI and popup formatting
-* [ ] Implement robust JSON parsing
-* [ ] Release **v0.1**
-* [ ] AI chat interface
-* [ ] Capture summarisation
-* [ ] Threat detection assistance
-* [ ] Intelligent protocol guidance
+```bash
+python app.py
+```
 
----
+Install the plugin:
+
+```bash
+ln -sf ~/Desktop/Wireshark-Assistant/plugin/explain.lua \
+~/.local/lib/wireshark/plugins/explain.lua
+```
+
+Launch Wireshark, select a packet, then choose:
+
+**Wireshark Assistant → Explain Packet**
+
+## Project Structure
+
+```text
+Wireshark-Assistant/
+├── backend/
+├── plugin/
+├── captures/
+├── docs/
+└── README.md
+```
+
+## Status
+
+🚧 Active development. Core AI pipeline is complete, with new analysis and usability features planned.
 
 ## License
 
-This project is intended for educational and research purposes.
+Educational and research purposes.
