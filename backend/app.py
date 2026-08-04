@@ -1,21 +1,24 @@
 from flask import Flask, request, jsonify
 
+from prompt_builder import build_prompt
+from ai_client import generate_explanation
+
 app = Flask(__name__)
 
 @app.route("/explain", methods=["POST"])
 def explain():
 
-    data = request.json
+    packet = request.json
 
-    protocol = data.get("protocol", "Unknown")
-    src = data.get("source", "Unknown")
-    dst = data.get("destination", "Unknown")
+    prompt = build_prompt(packet)
+
+    explanation = generate_explanation(prompt)
 
     return jsonify({
-        "status": "success",
-        "explanation":
-        f"This is a {protocol} packet travelling from {src} to {dst}."
+        "summary": "AI Packet Analysis",
+        "explanation": explanation
     })
+
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000)
