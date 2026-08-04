@@ -4,7 +4,7 @@ An AI-powered Wireshark plugin that generates concise, human-readable explanatio
 
 The project combines a **Lua Wireshark plugin**, **Python Flask backend**, and **Google Gemini API** to make packet analysis easier to understand.
 
-> **Status:** Ongoing — the core AI packet-analysis pipeline is functional. UI improvements, easier installation, chat functionality, and advanced traffic analysis are planned.
+> **Status:** Ongoing — the core AI packet-analysis pipeline is functional. UI improvements, easier installation, chat functionality, and advanced traffic analysis are planned and it is linux native for now.
 
 ## Features
 
