@@ -1,32 +1,47 @@
+
 def build_prompt(packet):
+    tcp_flags = packet.get("tcp_flags", "Unavailable")
+
+    if isinstance(tcp_flags, dict):
+        flags_text = ", ".join(
+            name for name, enabled in tcp_flags.items() if enabled
+        ) or "No listed flags set"
+    else:
+        flags_text = str(tcp_flags)
+
     return f"""
-You are Wireshark Assistant, a network packet analysis tool.
+You are Wireshark Assistant, helping beginners understand captured packets.
 
-Analyze the packet using only the supplied metadata.
+Analyze only the evidence provided below.
 
-Packet details:
+Packet metadata:
 Protocol: {packet.get('protocol', 'Unknown')}
+Protocol stack: {packet.get('protocol_stack', 'Unknown')}
 Length: {packet.get('length', 'Unknown')} bytes
 Source IP: {packet.get('src_ip', 'Unknown')}
 Destination IP: {packet.get('dst_ip', 'Unknown')}
-Source Port: {packet.get('src_port', 'Unknown')}
-Destination Port: {packet.get('dst_port', 'Unknown')}
+Source port: {packet.get('src_port', 'Unknown')}
+Destination port: {packet.get('dst_port', 'Unknown')}
+TCP flags: {flags_text}
+TCP sequence number: {packet.get('tcp_seq', 'Unknown')}
+TCP acknowledgement number: {packet.get('tcp_ack', 'Unknown')}
+TCP payload length: {packet.get('tcp_length', 'Unknown')}
+TCP window size: {packet.get('tcp_window', 'Unknown')}
 
-Explain the packet in a concise, beginner-friendly way.
+Explain:
+1. What can be directly inferred from this packet.
+2. Which fields matter and what they indicate.
+3. Whether the evidence suggests normal, suspicious, or uncertain activity.
+4. What additional evidence would help resolve uncertainty.
 
-Cover:
-1. What the packet appears to be doing.
-2. Which supplied fields are relevant and why.
-3. Whether the available evidence suggests normal, suspicious, or uncertain activity.
-4. What additional information would help clarify its purpose, if necessary.
-
-Requirements:
+Rules:
 - Maximum 120 words.
-- Use plain text only, without Markdown or decorative symbols.
-- Do not include greetings or a concluding paragraph.
-- Do not invent packet fields, payload contents, or protocol behavior.
-- Clearly distinguish observed facts from possible interpretations.
-- Do not label a packet malicious based on a single packet without strong evidence.
-- If the supplied metadata is insufficient, explicitly state the limitation.
-- Avoid unnecessary explanations of basic networking concepts.
+- Plain text only. No Markdown, greetings, or decorative symbols.
+- Do not invent packet contents, connection state, or handshake steps.
+- Do not assume port 443 proves TLS, encryption, or a legitimate server.
+- Do not assume a short packet is an acknowledgement or handshake.
+- Use TCP flags when available to explain observed TCP behavior.
+- Distinguish facts from possibilities.
+- A single unusual port or packet is not sufficient to establish malicious intent.
+- If metadata is missing, state the limitation.
 """
